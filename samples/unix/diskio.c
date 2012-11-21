@@ -26,7 +26,7 @@ DWORD get_fattime(void) {
       | (sec & 0x1F);
 }
 
-int diskio_init(char *file) {
+int diskio_init(const char *file) {
   if (drvFile != NULL) {
     return 0;
   }
@@ -42,6 +42,7 @@ int diskio_init(char *file) {
 int diskio_close() {
   if (drvFile) {
     fclose(drvFile);
+    drvFile = NULL;
   }
   return 1;
 }
