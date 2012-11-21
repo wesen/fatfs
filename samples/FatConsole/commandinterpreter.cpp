@@ -16,10 +16,14 @@
 CommandInterpreter::CommandInterpreter(QObject *parent) :
   QObject(parent)
 {
+  registerCommands();
+}
+
+void CommandInterpreter::registerCommands() {
   const QMetaObject *metaObject = this->metaObject();
   for (int i = 0; i < metaObject->methodCount(); i++) {
     QMetaMethod metaMethod = metaObject->method(i);
-    //        qDebug() << "Method " << i << " " << metaMethod.signature();
+//    qDebug() << "Method " << i << " " << metaMethod.signature();
     QString signature(metaMethod.signature());
     if (signature.startsWith("cmd")) {
       QString cmdName = signature.mid(3, signature.indexOf('(') - 3);

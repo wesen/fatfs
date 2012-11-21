@@ -31,6 +31,8 @@ public slots:
   void cmdHelp(QString cmd);
 
 protected:
+  virtual void registerCommands();
+
   QMap<QString, QMetaMethod> dispatch;
 };
 

@@ -1,6 +1,10 @@
 #ifndef FATCOMMANDINTERPRETER_H
 #define FATCOMMANDINTERPRETER_H
 
+
+#include "ff.h"
+#include "diskio.h"
+
 #include "commandinterpreter.h"
 
 class FatCommandInterpreter : public CommandInterpreter
@@ -12,11 +16,19 @@ public:
 signals:
 
 public slots:
-  //    void cmdMount();
-  //    void cmdUnmount();
+  void cmdExit();
 
-  //    void cmdShowFAT();
-  //    void cmdHideFAT();
+  void cmdMount();
+  void cmdUnmount();
+
+  void cmdFormat();
+  void cmdCreate(QString filename, int sectorCount);
+
+  void cmdInit(QString filename);
+  void cmdClose();
+
+  void cmdShowFAT();
+  void cmdHideFAT();
 
   //    void cmdSetDebugLevel(int level);
 
@@ -24,6 +36,7 @@ public slots:
   void sniffFATInput(QByteArray);
 
 protected:
+  FATFS fs;
   bool showFAT;
 
 };
