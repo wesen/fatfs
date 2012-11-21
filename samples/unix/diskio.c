@@ -31,7 +31,7 @@ int diskio_init(const char *file) {
     return 0;
   }
 
-  drvFile = fopen(file, "a");
+  drvFile = fopen(file, "r+");
   if (!drvFile) {
     return 0;
   } else {
@@ -65,12 +65,16 @@ DSTATUS disk_status(BYTE drv) {
 
 DRESULT disk_read(BYTE drv, BYTE *buffer, DWORD sectorNumber, BYTE sectorCount) {
   if (drv > 0 || drvFile == NULL) {
+    fprintf(stderr, "No opened drive %d\n", drv);
     return RES_ERROR;
   }
   if (fseek(drvFile, sectorNumber * 512, SEEK_SET)) {
+    fprintf(stderr, "Could not seek to sector %d\n", sectorNumber);
     return RES_ERROR;
   }
-  if (fread(buffer, 512, sectorCount, drvFile) != sectorCount) {
+  int ret;
+  if ((ret = fread(buffer, 512, sectorCount, drvFile)) != sectorCount) {
+    fprintf(stderr, "Could not read %d sectors starting at %d, read %d\n", sectorCount, sectorNumber, ret);
     return RES_ERROR;
   }
   return RES_OK;
@@ -78,12 +82,15 @@ DRESULT disk_read(BYTE drv, BYTE *buffer, DWORD sectorNumber, BYTE sectorCount) 
 
 DRESULT disk_write(BYTE drv, const BYTE *buffer, DWORD sectorNumber, BYTE sectorCount) {
   if (drv > 0 || drvFile == NULL) {
+    fprintf(stderr, "No opened drive %d\n", drv);
     return RES_ERROR;
   }
   if (fseek(drvFile, sectorNumber * 512, SEEK_SET)) {
+    fprintf(stderr, "Could not seek to sector %d\n", sectorNumber);
     return RES_ERROR;
   }
   if (fwrite(buffer, 512, sectorCount, drvFile) != sectorCount) {
+    fprintf(stderr, "Could not write %d sectors\n", sectorCount);
     return RES_ERROR;
   }
   return RES_OK;
